@@ -1,0 +1,102 @@
+<div class="page-header">
+  <h1>{{ 'EXAMS.TITLE' | translate }}</h1>
+  <button mat-raised-button color="primary" (click)="onCreate()">
+    <mat-icon>add</mat-icon>
+    {{ 'EXAMS.NEW_EXAM' | translate }}
+  </button>
+</div>
+
+<!-- Filters -->
+<mat-card class="filters-card">
+  <mat-card-content>
+    <div class="filters-row">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'EXAMS.FILTER_NAME' | translate }}</mat-label>
+        <input matInput [(ngModel)]="filterName" (input)="applyFilter()" [placeholder]="'EXAMS.FILTER_NAME_PLACEHOLDER' | translate">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'EXAMS.FILTER_COURSE' | translate }}</mat-label>
+        <input matInput [(ngModel)]="filterCourse" (input)="applyFilter()" [placeholder]="'EXAMS.FILTER_COURSE_PLACEHOLDER' | translate">
+      </mat-form-field>
+
+      <button mat-button color="warn" (click)="clearFilters()" *ngIf="filterName || filterCourse">
+        <mat-icon>clear</mat-icon>
+        {{ 'EXAMS.CLEAR_FILTERS' | translate }}
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- Error -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<!-- Table -->
+<mat-card *ngIf="!isLoading && !errorMessage">
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'EXAMS.TABLE.NAME' | translate }}</th>
+        <td mat-cell *matCellDef="let exam">{{ exam.name }}</td>
+      </ng-container>
+
+      <!-- Course Column -->
+      <ng-container matColumnDef="courseName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'EXAMS.TABLE.COURSE' | translate }}</th>
+        <td mat-cell *matCellDef="let exam">{{ exam.courseName || '-' }}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="examDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'EXAMS.TABLE.DATE' | translate }}</th>
+        <td mat-cell *matCellDef="let exam">{{ exam.examDate | date:'mediumDate' }}</td>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'EXAMS.TABLE.PRICE' | translate }}</th>
+        <td mat-cell *matCellDef="let exam">
+          {{ exam.price ? (exam.price + ' KM') : '-' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>{{ 'EXAMS.TABLE.ACTIONS' | translate }}</th>
+        <td mat-cell *matCellDef="let exam">
+          <button mat-icon-button color="primary" (click)="onEdit(exam)" [matTooltip]="'COMMON.EDIT' | translate">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(exam)" [matTooltip]="'COMMON.DELETE' | translate">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+          {{ 'EXAMS.NO_DATA' | translate }}
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]"
+                   showFirstLastButtons
+                   aria-label="Select page of exams">
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

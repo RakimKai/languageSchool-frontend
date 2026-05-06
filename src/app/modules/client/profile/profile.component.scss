@@ -1,0 +1,516 @@
+// === VARIABLES ===
+$primary-blue: #4a90e2;
+$dark-blue: #2e5c8a;
+$light-blue: #e8f4fd;
+$lighter-blue: #f5faff;
+$text-dark: #1a1a1a;
+$text-light: #666666;
+$white: #ffffff;
+$success-green: #4caf50;
+
+// === PAGE HEADER ===
+.page-header {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  .header-content {
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: $text-light;
+      font-size: 15px;
+      margin: 0;
+    }
+  }
+}
+
+// === LAYOUT ===
+.profile-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+// === PROFILE SIDEBAR ===
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.image-card {
+  background: $white;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  .image-wrapper {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px;
+    cursor: pointer;
+
+    &:hover .image-overlay {
+      opacity: 1;
+    }
+  }
+
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, $light-blue 0%, $lighter-blue 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid $white;
+    box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    mat-icon {
+      font-size: 80px;
+      width: 80px;
+      height: 80px;
+      color: $primary-blue;
+      opacity: 0.5;
+    }
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: $white;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    span {
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  .user-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 4px;
+  }
+
+  .user-email {
+    font-size: 14px;
+    color: $text-light;
+    margin-bottom: 16px;
+  }
+
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, $primary-blue 0%, $dark-blue 100%);
+    color: $white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .upload-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+
+    .selected-file {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: $lighter-blue;
+      border-radius: 10px;
+      margin-bottom: 12px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: $primary-blue;
+      }
+
+      span {
+        font-size: 13px;
+        color: $text-dark;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      button {
+        margin-left: auto;
+      }
+    }
+
+    .upload-btn {
+      width: 100%;
+      border-radius: 10px;
+      height: 44px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      mat-spinner {
+        display: inline-block;
+        margin-right: 8px;
+
+        ::ng-deep circle {
+          stroke: $white;
+        }
+      }
+    }
+
+    .upload-progress {
+      margin-top: 12px;
+      border-radius: 4px;
+    }
+  }
+
+  .upload-hint {
+    font-size: 12px;
+    color: $text-light;
+    margin: 16px 0 0 0;
+  }
+}
+
+.account-stats {
+  background: $white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $primary-blue;
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+
+      .stat-label {
+        font-size: 12px;
+        color: $text-light;
+      }
+
+      .stat-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: $text-dark;
+      }
+    }
+  }
+}
+
+// === PROFILE MAIN ===
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-card,
+.security-card {
+  background: $white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  .card-header {
+    margin-bottom: 28px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0 0 6px 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: $text-light;
+      margin: 0;
+    }
+  }
+}
+
+// === FORM ===
+.profile-form {
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+
+  .form-field {
+    &.full-width {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    ::ng-deep {
+      .mat-mdc-text-field-wrapper {
+        background: $lighter-blue;
+        border-radius: 12px;
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: rgba(74, 144, 226, 0.2);
+        }
+      }
+
+      .mdc-text-field--focused {
+        .mat-mdc-text-field-wrapper {
+          background: $white;
+          box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+        }
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: $primary-blue !important;
+          border-width: 2px !important;
+        }
+      }
+
+      .mat-mdc-form-field-icon-prefix {
+        color: $primary-blue;
+      }
+    }
+  }
+
+  .form-actions {
+    margin-top: 24px;
+
+    .save-btn {
+      height: 48px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 0 32px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      mat-spinner {
+        display: inline-block;
+        margin-right: 8px;
+
+        ::ng-deep circle {
+          stroke: $white;
+        }
+      }
+    }
+  }
+}
+
+// === SECURITY CARD ===
+.security-card {
+  .security-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: $lighter-blue;
+    border-radius: 12px;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .security-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $primary-blue;
+      }
+
+      .security-label {
+        display: block;
+        font-size: 12px;
+        color: $text-light;
+        margin-bottom: 2px;
+      }
+
+      .security-value {
+        display: block;
+        font-size: 15px;
+        font-weight: 500;
+        color: $text-dark;
+      }
+    }
+
+    .verified-chip {
+      background: rgba($success-green, 0.12);
+      color: $success-green;
+      font-weight: 600;
+      font-size: 12px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
+    }
+
+    .change-btn {
+      border-radius: 10px;
+      font-weight: 500;
+    }
+  }
+}
+
+// === LOADING ===
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+}
+
+// === ERROR ===
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  color: #f44336;
+  background: #ffebee;
+  border-radius: 12px;
+  margin: 20px 0;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// === RESPONSIVE ===
+@media (max-width: 992px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    order: -1;
+  }
+
+  .image-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-header {
+    padding: 20px;
+
+    .header-content h1 {
+      font-size: 22px;
+    }
+  }
+
+  .form-card,
+  .security-card {
+    padding: 24px 20px;
+  }
+
+  .profile-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .image-card .image-wrapper {
+    width: 140px;
+    height: 140px;
+  }
+
+  .security-card .security-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .verified-chip,
+    .change-btn {
+      align-self: flex-start;
+    }
+  }
+}

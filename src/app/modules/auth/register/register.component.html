@@ -1,0 +1,161 @@
+<div class="auth-container">
+  <div class="auth-background">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+  </div>
+
+  <div class="auth-content">
+    <!-- Logo & Brand -->
+    <div class="auth-brand">
+      <mat-icon class="brand-icon">school</mat-icon>
+      <h1 class="brand-name">Language School</h1>
+    </div>
+
+    <!-- Register Card -->
+    <mat-card class="auth-card mat-elevation-z8">
+      <mat-card-header>
+        <mat-card-title>Registracija</mat-card-title>
+        <mat-card-subtitle>Unesite vaše podatke za kreiranje naloga</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- First Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ime</mat-label>
+            <input matInput formControlName="firstname" placeholder="Vaše ime" autocomplete="given-name" />
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="form.get('firstname')?.hasError('required')">
+              Ime je obavezno
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Last Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prezime</mat-label>
+            <input matInput formControlName="lastname" placeholder="Vaše prezime" autocomplete="family-name" />
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <mat-error *ngIf="form.get('lastname')?.hasError('required')">
+              Prezime je obavezno
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="vasa.email@primjer.com" autocomplete="email" />
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              Email je obavezan
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Unesite validan email
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Phone (optional) -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Telefon (opcionalno)</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="+387 61 123 456" autocomplete="tel" />
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Lozinka</mat-label>
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="••••••••" autocomplete="new-password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              Lozinka je obavezna
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('minLength')">
+              Lozinka mora imati minimalno 8 karaktera
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Password Strength Indicator -->
+          <div class="password-strength" *ngIf="form.get('password')?.value">
+            <div class="strength-header">
+              <span>Jačina lozinke:</span>
+              <span class="strength-text" [ngClass]="'strength-' + passwordStrength.level">
+                {{ passwordStrength.text }}
+              </span>
+            </div>
+            <div class="strength-segments">
+              <div class="segment" [class.active]="passwordStrength.level >= 1" [class.weak]="passwordStrength.level === 1"></div>
+              <div class="segment" [class.active]="passwordStrength.level >= 2" [class.medium]="passwordStrength.level >= 2"></div>
+              <div class="segment" [class.active]="passwordStrength.level >= 3" [class.good]="passwordStrength.level >= 3"></div>
+              <div class="segment" [class.active]="passwordStrength.level >= 4" [class.strong]="passwordStrength.level >= 4"></div>
+            </div>
+            <div class="requirements-list">
+              <div *ngFor="let req of passwordRequirements"
+                   class="requirement"
+                   [class.met]="req.met">
+                <mat-icon>{{ req.met ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                <span>{{ req.text }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Potvrdi lozinku</mat-label>
+            <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="••••••••" autocomplete="new-password" />
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.get('confirmPassword')?.hasError('required')">
+              Potvrda lozinke je obavezna
+            </mat-error>
+          </mat-form-field>
+
+          <!-- reCAPTCHA -->
+          <div class="recaptcha-wrapper" *ngIf="isRecaptchaEnabled">
+            <div #recaptchaContainer class="recaptcha-container"></div>
+            <div *ngIf="recaptchaError" class="recaptcha-error">
+              <mat-icon>error_outline</mat-icon>
+              <span>Greska pri ucitavanju reCAPTCHA. Osvjezite stranicu.</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="actions">
+            <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="form.invalid || isLoading || (isRecaptchaEnabled && !captchaVerified)">
+              <ng-container *ngIf="!isLoading; else loadingTpl">
+                <mat-icon>person_add</mat-icon>
+                Registruj se
+              </ng-container>
+              <ng-template #loadingTpl>
+                <mat-progress-spinner mode="indeterminate" diameter="20" strokeWidth="3"></mat-progress-spinner>
+                <span>Registracija u toku...</span>
+              </ng-template>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider">
+            <span>ili</span>
+          </div>
+
+          <!-- Login Link -->
+          <div class="register-prompt">
+            <span>Već imate nalog?</span>
+            <a (click)="navigateToLogin()" class="register-link">Prijavite se</a>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- SIDEBAR -->
+  <mat-sidenav mode="side" opened class="sidenav">
+    <!-- SIDEBAR HEADER WITH USER INFO -->
+    <div class="sidebar-header">
+      <!-- User Info -->
+      <div class="user-info">
+        <div class="user-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="user-details">
+          <div class="user-email">{{ auth.currentUser()?.email }}</div>
+          <div class="user-role">
+            @if (auth.isAdmin()) {
+            <mat-chip class="role-chip admin">
+              <mat-icon>admin_panel_settings</mat-icon>
+              {{ 'SIDEBAR.ROLES.ADMIN' | translate }}
+            </mat-chip>
+            } @else if (auth.isManager()) {
+            <mat-chip class="role-chip manager">
+              <mat-icon>manage_accounts</mat-icon>
+              {{ 'SIDEBAR.ROLES.MANAGER' | translate }}
+            </mat-chip>
+            } @else if (auth.isEmployee()) {
+            <mat-chip class="role-chip employee">
+              <mat-icon>badge</mat-icon>
+              {{ 'SIDEBAR.ROLES.EMPLOYEE' | translate }}
+            </mat-chip>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION MENU -->
+    <mat-nav-list>
+      <!-- COURSES SECTION -->
+      <div class="nav-section-title">
+        {{ 'SIDEBAR.ADMIN.COURSES_SECTION' | translate }}
+      </div>
+
+      <a mat-list-item routerLink="/admin/courses" routerLinkActive="active">
+        <mat-icon matListItemIcon>school</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.ADMIN.COURSES' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin/enrollments" routerLinkActive="active">
+        <mat-icon matListItemIcon>how_to_reg</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.ADMIN.ENROLLMENTS' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin/exams" routerLinkActive="active">
+        <mat-icon matListItemIcon>quiz</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.ADMIN.EXAMS' | translate }}</span>
+      </a>
+
+      <!-- SYSTEM SECTION -->
+      <div class="nav-section-title">{{ 'SIDEBAR.ADMIN.SYSTEM_SECTION' | translate }}</div>
+
+      <a mat-list-item routerLink="/admin/settings" routerLinkActive="active">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.ADMIN.SETTINGS' | translate }}</span>
+      </a>
+
+      <!-- LOGOUT -->
+      <a mat-list-item routerLink="/auth/logout" routerLinkActive="active" class="logout-item">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.ADMIN.LOGOUT' | translate }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- MAIN CONTENT -->
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

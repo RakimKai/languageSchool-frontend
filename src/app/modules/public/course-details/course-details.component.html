@@ -1,0 +1,203 @@
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="48"></mat-spinner>
+</div>
+
+<!-- Course Details -->
+<div class="course-details-page" *ngIf="course && !isLoading">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/courses">Kursevi</a>
+    <mat-icon>chevron_right</mat-icon>
+    <span>{{ course.categoryName || 'Opsti' }}</span>
+    <mat-icon>chevron_right</mat-icon>
+    <span class="current">{{ course.name }}</span>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="details-layout">
+    <!-- Left Column -->
+    <div class="course-main">
+      <!-- Course Header Card -->
+      <div class="course-header-card">
+        <div class="header-image">
+          <div class="image-placeholder">
+            <mat-icon>school</mat-icon>
+          </div>
+          <span class="course-level" *ngIf="course.courseType">{{ course.courseType }}</span>
+        </div>
+        <div class="header-content">
+          <div class="category-badge">{{ course.categoryName || 'Opsti kurs' }}</div>
+          <h1>{{ course.name }}</h1>
+          <p class="course-type" *ngIf="course.courseType">{{ course.courseType }}</p>
+        </div>
+      </div>
+
+      <!-- Course Info Section -->
+      <div class="info-section">
+        <h2>O kursu</h2>
+        <p class="description">
+          {{ course.description || 'Naucite ovaj jezik sa iskusnim instruktorima u interaktivnom okruzenju. Nasi kursevi su dizajnirani da vam pomognu postici tecnost kroz prakticne vjezbe i scenarije iz stvarnog zivota.' }}
+        </p>
+      </div>
+
+      <!-- Course Details Grid -->
+      <div class="details-grid">
+        <div class="detail-item" *ngIf="course.professorName">
+          <div class="detail-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Profesor</span>
+            <span class="detail-value">{{ course.professorName }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="course.courseDate">
+          <div class="detail-icon">
+            <mat-icon>event</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Pocetak kursa</span>
+            <span class="detail-value">{{ course.courseDate | date:'dd.MM.yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="course.durationInHours">
+          <div class="detail-icon">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Trajanje</span>
+            <span class="detail-value">{{ course.durationInHours }} sati</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="course.numberOfClasses">
+          <div class="detail-icon">
+            <mat-icon>class</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Broj casova</span>
+            <span class="detail-value">{{ course.numberOfClasses }} sesija</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="course.maxStudents">
+          <div class="detail-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Max studenata</span>
+            <span class="detail-value">{{ course.maxStudents }} po grupi</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-icon">
+            <mat-icon>workspace_premium</mat-icon>
+          </div>
+          <div class="detail-content">
+            <span class="detail-label">Certifikat</span>
+            <span class="detail-value">Po zavrsetku</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- What You'll Learn -->
+      <div class="learn-section">
+        <h2>Sta cete nauciti</h2>
+        <div class="learn-grid">
+          <div class="learn-item">
+            <mat-icon>check_circle</mat-icon>
+            <span>Osnove gramatike i vokabulara</span>
+          </div>
+          <div class="learn-item">
+            <mat-icon>check_circle</mat-icon>
+            <span>Konverzacijske vjestine</span>
+          </div>
+          <div class="learn-item">
+            <mat-icon>check_circle</mat-icon>
+            <span>Pisanje i citanje</span>
+          </div>
+          <div class="learn-item">
+            <mat-icon>check_circle</mat-icon>
+            <span>Slusanje i razumijevanje</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Enrollment Card -->
+    <aside class="enrollment-sidebar">
+      <div class="enrollment-card">
+        <div class="price-section">
+          <span class="price" *ngIf="course.price && course.price > 0">{{ course.price }} KM</span>
+          <span class="price free" *ngIf="!course.price || course.price === 0">Besplatno</span>
+        </div>
+
+        <div class="features-list">
+          <div class="feature">
+            <mat-icon>check</mat-icon>
+            <span>Certifikat po zavrsetku</span>
+          </div>
+          <div class="feature">
+            <mat-icon>check</mat-icon>
+            <span>Pristup materijalima</span>
+          </div>
+          <div class="feature">
+            <mat-icon>check</mat-icon>
+            <span>Interaktivne sesije</span>
+          </div>
+          <div class="feature">
+            <mat-icon>check</mat-icon>
+            <span>Pracenje napretka</span>
+          </div>
+        </div>
+
+        <button mat-raised-button
+                color="primary"
+                class="enroll-button"
+                (click)="enroll()"
+                [disabled]="isEnrolling">
+          <ng-container *ngIf="!isEnrolling">
+            Upisi se
+            <mat-icon>arrow_forward</mat-icon>
+          </ng-container>
+          <ng-container *ngIf="isEnrolling">
+            <mat-spinner diameter="20"></mat-spinner>
+            Upis u toku...
+          </ng-container>
+        </button>
+
+        <p class="login-hint" *ngIf="!isLoggedIn">
+          <a routerLink="/auth/login" [queryParams]="{returnUrl: '/courses/' + course.id}">Prijavite se</a>
+          ili
+          <a routerLink="/auth/register">Registrujte se</a>
+          za upis
+        </p>
+
+        <div class="guarantee">
+          <mat-icon>verified_user</mat-icon>
+          <span>30 dana garancije povrata novca</span>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <button mat-stroked-button class="back-btn" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Nazad na kurseve
+      </button>
+    </aside>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div class="error-container" *ngIf="errorMessage && !isLoading">
+  <mat-icon>error_outline</mat-icon>
+  <h3>Kurs nije pronadjen</h3>
+  <p>Kurs koji trazite ne postoji ili je uklonjen.</p>
+  <button mat-raised-button color="primary" (click)="goBack()">
+    Pregledaj kurseve
+  </button>
+</div>

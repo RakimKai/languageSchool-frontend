@@ -1,0 +1,320 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// Light theme (default)
+body {
+  background-color: #fafafa;
+  color: #212121;
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root {
+  --mat-sys-surface: #fafafa;
+  --mat-sys-on-surface: #212121;
+  --mat-sys-background: #ffffff;
+  --mat-sys-on-background: #212121;
+  --mat-sys-surface-container: #ffffff;
+  --mat-sys-surface-container-low: #f5f5f5;
+  --mat-sys-surface-container-high: #ffffff;
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #212121;
+  --card-bg: #ffffff;
+  --card-text: #212121;
+  --header-bg: #fafafa;
+}
+
+// Dark theme
+body.dark-theme {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+
+  --mat-sys-surface: #1e1e1e;
+  --mat-sys-on-surface: #e0e0e0;
+  --mat-sys-background: #121212;
+  --mat-sys-on-background: #e0e0e0;
+  --mat-sys-surface-container: #1e1e1e;
+  --mat-sys-surface-container-low: #181818;
+  --mat-sys-surface-container-high: #2d2d2d;
+
+  // Material cards
+  .mat-mdc-card {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+
+    .mat-mdc-card-title, .mat-mdc-card-subtitle {
+      color: #e0e0e0 !important;
+    }
+  }
+
+  // Sidenav
+  .mat-sidenav {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+  }
+
+  .mat-sidenav-container {
+    background-color: #121212 !important;
+  }
+
+  .mat-sidenav-content {
+    background-color: #121212 !important;
+  }
+
+  // Main content area
+  .main-content {
+    background-color: #121212 !important;
+  }
+
+  // Settings page
+  .settings-page {
+    background-color: #121212 !important;
+  }
+
+  // Form fields
+  .mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: #2d2d2d;
+    --mdc-outlined-text-field-outline-color: #555;
+    --mdc-outlined-text-field-label-text-color: #aaa;
+    --mdc-outlined-text-field-input-text-color: #e0e0e0;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background-color: #2d2d2d !important;
+  }
+
+  .mat-mdc-select-value {
+    color: #e0e0e0 !important;
+  }
+
+  .mat-mdc-select-arrow {
+    color: #e0e0e0 !important;
+  }
+
+  // Labels
+  .setting-label {
+    color: #e0e0e0 !important;
+  }
+
+  .setting-value {
+    color: #bbb !important;
+  }
+
+  .setting-description {
+    color: #999 !important;
+  }
+
+  // Tables
+  .mat-mdc-table {
+    background-color: #1e1e1e !important;
+  }
+
+  .mat-mdc-row {
+    background-color: #1e1e1e !important;
+  }
+
+  .mat-mdc-header-row {
+    background-color: #252525 !important;
+  }
+
+  .mat-mdc-cell, .mat-mdc-header-cell {
+    color: #e0e0e0 !important;
+    border-bottom-color: #333 !important;
+  }
+
+  // Dialogs
+  .mat-mdc-dialog-container {
+    background-color: #2d2d2d !important;
+
+    .mdc-dialog__surface {
+      background-color: #2d2d2d !important;
+    }
+  }
+
+  // Select/Dropdown panel
+  .mat-mdc-select-panel {
+    background-color: #2d2d2d !important;
+  }
+
+  .mat-mdc-option {
+    color: #e0e0e0 !important;
+
+    &:hover {
+      background-color: #3d3d3d !important;
+    }
+  }
+
+  // Menu
+  .mat-mdc-menu-panel {
+    background-color: #2d2d2d !important;
+  }
+
+  .mat-mdc-menu-item {
+    color: #e0e0e0 !important;
+  }
+
+  // Chips
+  .mat-mdc-chip {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+  }
+
+  // Page headers
+  .page-header {
+    background: linear-gradient(135deg, #1565c0, #0d47a1) !important;
+    color: white !important;
+
+    h1, p {
+      color: white !important;
+    }
+  }
+
+  // Custom classes
+  .settings-card, .form-card, .security-card, .image-card, .account-stats {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+  }
+
+  .settings-grid {
+    background-color: transparent !important;
+  }
+
+  // Nav items
+  .mat-mdc-list-item {
+    color: #e0e0e0 !important;
+
+    .mat-icon {
+      color: #e0e0e0 !important;
+    }
+  }
+
+  // Inputs
+  input, textarea {
+    color: #e0e0e0 !important;
+    background-color: transparent !important;
+  }
+
+  // Dividers
+  .mat-divider {
+    border-color: #444 !important;
+  }
+
+  // Buttons
+  .mat-mdc-outlined-button {
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+  }
+
+  // Paginator
+  .mat-mdc-paginator {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+  }
+
+  // Icons
+  .mat-icon {
+    color: inherit;
+  }
+
+  // Filter container
+  .filter-container, .filters-row {
+    background-color: #1e1e1e !important;
+  }
+
+  // Card content
+  .mat-mdc-card-content {
+    color: #e0e0e0 !important;
+  }
+
+  // Snackbar override for dark
+  .mat-mdc-snack-bar-container {
+    background-color: #333 !important;
+  }
+}
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+// Add this to your global styles.scss
+
+// ===========================
+// TOASTER / SNACKBAR STYLES
+// ===========================
+
+.snackbar-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+  }
+}
+
+.snackbar-error {
+  background-color: #f44336 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+  }
+}
+
+.snackbar-warning {
+  background-color: #ff9800 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+  }
+}
+
+.snackbar-info {
+  background-color: #2196f3 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+  }
+}

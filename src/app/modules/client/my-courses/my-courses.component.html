@@ -1,0 +1,161 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="header-content">
+    <h1>Moji kursevi</h1>
+    <p>Upravljajte vasim upisanim kursevima i preuzmite potvrde</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="browseCourses()">
+    <mat-icon>add</mat-icon>
+    Upisi novi kurs
+  </button>
+</div>
+
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<!-- Main Content Card -->
+<div class="main-card" *ngIf="!isLoading">
+  <!-- Tabs -->
+  <mat-tab-group (selectedTabChange)="onTabChange($event)" [selectedIndex]="selectedTabIndex" class="courses-tabs">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Svi</span>
+        <span class="tab-count">{{ enrollments.length }}</span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Aktivni</span>
+        <span class="tab-count active">{{ getActiveCount() }}</span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Zavrseni</span>
+        <span class="tab-count completed">{{ getCompletedCount() }}</span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Ceka placanje</span>
+        <span class="tab-count unpaid">{{ getUnpaidCount() }}</span>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="filteredEnrollments.length > 0">
+    <table mat-table [dataSource]="filteredEnrollments" class="courses-table">
+      <!-- Course Name Column -->
+      <ng-container matColumnDef="course">
+        <th mat-header-cell *matHeaderCellDef>Kurs</th>
+        <td mat-cell *matCellDef="let enrollment">
+          <div class="course-cell">
+            <div class="course-icon">
+              <mat-icon>school</mat-icon>
+            </div>
+            <div class="course-info">
+              <span class="course-name">{{ enrollment.courseName }}</span>
+              <span class="course-level" *ngIf="enrollment.courseLevel">{{ enrollment.courseLevel }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Start Date Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Datum pocetka</th>
+        <td mat-cell *matCellDef="let enrollment">
+          <div class="date-cell">
+            <mat-icon>event</mat-icon>
+            <span>{{ enrollment.courseDate | date:'dd.MM.yyyy' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Payment Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status placanja</th>
+        <td mat-cell *matCellDef="let enrollment">
+          <div class="status-badge" [class]="getStatusClass(enrollment)">
+            <mat-icon>{{ enrollment.isPaid ? 'check_circle' : 'schedule' }}</mat-icon>
+            <span>{{ getStatusText(enrollment) }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Certificate Column -->
+      <ng-container matColumnDef="certificate">
+        <th mat-header-cell *matHeaderCellDef>Potvrda</th>
+        <td mat-cell *matCellDef="let enrollment">
+          <button mat-raised-button
+                  class="download-btn"
+                  *ngIf="canDownloadCertificate(enrollment)"
+                  (click)="downloadCertificate(enrollment)"
+                  [disabled]="isDownloading(enrollment.id)">
+            <mat-icon *ngIf="!isDownloading(enrollment.id)">picture_as_pdf</mat-icon>
+            <mat-spinner *ngIf="isDownloading(enrollment.id)" diameter="18"></mat-spinner>
+            <span>{{ isDownloading(enrollment.id) ? 'Preuzimanje...' : 'Preuzmi' }}</span>
+          </button>
+          <span class="no-certificate" *ngIf="!canDownloadCertificate(enrollment) && isCompleted(enrollment) && !enrollment.isPaid">
+            <mat-icon>info</mat-icon>
+            Placanje potrebno
+          </span>
+          <span class="no-certificate" *ngIf="!canDownloadCertificate(enrollment) && !isCompleted(enrollment)">
+            <mat-icon>hourglass_empty</mat-icon>
+            U toku
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let enrollment">
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="actions-btn">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="viewCourseDetails(enrollment)">
+              <mat-icon>visibility</mat-icon>
+              <span>Vidi detalje</span>
+            </button>
+            <button mat-menu-item *ngIf="canDownloadCertificate(enrollment)" (click)="downloadCertificate(enrollment)">
+              <mat-icon>download</mat-icon>
+              <span>Preuzmi potvrdu</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="course-row" (click)="viewCourseDetails(row)"></tr>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredEnrollments.length === 0">
+    <div class="empty-icon">
+      <mat-icon>school</mat-icon>
+    </div>
+    <h3 *ngIf="filterStatus === 'all'">Niste upisali nijedan kurs</h3>
+    <h3 *ngIf="filterStatus !== 'all'">Nema {{ getEmptyStateText() }} kurseva</h3>
+    <p *ngIf="filterStatus === 'all'">Zapocnite svoje ucenje upisivanjem u kurs</p>
+    <p *ngIf="filterStatus !== 'all'">Pokusajte promijeniti filter da vidite ostale kurseve</p>
+    <button mat-raised-button color="primary" (click)="browseCourses()" *ngIf="filterStatus === 'all'">
+      <mat-icon>explore</mat-icon>
+      Pregledaj kurseve
+    </button>
+    <button mat-stroked-button color="primary" (click)="onFilterChange('all')" *ngIf="filterStatus !== 'all'">
+      Prikazi sve kurseve
+    </button>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <p>{{ errorMessage }}</p>
+</div>

@@ -1,0 +1,155 @@
+<!-- Welcome Section -->
+<div class="welcome-section">
+  <div class="welcome-content">
+    <h1>Dobrodosli nazad, {{ userName }}!</h1>
+    <p>Evo pregleda vaseg napretka u ucenju</p>
+  </div>
+  <div class="welcome-date">
+    <mat-icon>calendar_today</mat-icon>
+    <span>{{ today | date:'EEEE, dd. MMMM yyyy.' }}</span>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid" *ngIf="!isLoading">
+  <div class="stat-card">
+    <div class="stat-icon primary">
+      <mat-icon>school</mat-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ totalCourses }}</span>
+      <span class="stat-label">Ukupno upisanih</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon success">
+      <mat-icon>play_circle</mat-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ activeCourses }}</span>
+      <span class="stat-label">Aktivni kursevi</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon accent">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ completedCourses }}</span>
+      <span class="stat-label">Zavrseni</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon warning">
+      <mat-icon>pending</mat-icon>
+    </div>
+    <div class="stat-info">
+      <span class="stat-value">{{ pendingPayments }}</span>
+      <span class="stat-label">Ceka placanje</span>
+    </div>
+  </div>
+</div>
+
+<!-- Content Grid -->
+<div class="content-grid" *ngIf="!isLoading">
+  <!-- Recent Enrollments -->
+  <div class="card enrollments-card">
+    <div class="card-header">
+      <div class="card-title">
+        <mat-icon>school</mat-icon>
+        <span>Moji nedavni kursevi</span>
+      </div>
+      <button mat-button color="primary" (click)="goToMyCourses()" *ngIf="enrollments.length > 0">
+        Vidi sve
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    <div class="card-content">
+      <div class="enrollments-list" *ngIf="enrollments.length > 0">
+        <div class="enrollment-item" *ngFor="let enrollment of enrollments.slice(0, 5)" (click)="viewCourse(enrollment)">
+          <div class="enrollment-icon" [class.paid]="enrollment.isPaid" [class.unpaid]="!enrollment.isPaid">
+            <mat-icon>{{ enrollment.isPaid ? 'check_circle' : 'schedule' }}</mat-icon>
+          </div>
+          <div class="enrollment-info">
+            <span class="course-name">{{ enrollment.courseName }}</span>
+            <span class="course-date">
+              <mat-icon>event</mat-icon>
+              {{ enrollment.courseDate | date:'dd.MM.yyyy' }}
+            </span>
+          </div>
+          <div class="enrollment-status" [class.paid]="enrollment.isPaid" [class.unpaid]="!enrollment.isPaid">
+            {{ enrollment.isPaid ? 'Placeno' : 'Ceka placanje' }}
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="enrollments.length === 0">
+        <mat-icon>school</mat-icon>
+        <p>Niste upisali nijedan kurs</p>
+        <button mat-raised-button color="primary" (click)="goToBrowseCourses()">
+          Pregledaj kurseve
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="card notifications-card">
+    <div class="card-header">
+      <div class="card-title">
+        <mat-icon>notifications</mat-icon>
+        <span>Obavijesti</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <div class="notifications-list" *ngIf="notifications.length > 0">
+        <div class="notification-item" *ngFor="let notification of notifications; let i = index">
+          <div class="notification-dot" [class]="getNotificationClass(i)"></div>
+          <div class="notification-content">
+            <div class="notification-header">
+              <span class="notification-title">{{ notification.title }}</span>
+              <span class="notification-date">{{ notification.createdAtUtc | date:'dd.MM.yyyy' }}</span>
+            </div>
+            <p class="notification-text">{{ notification.content }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="notifications.length === 0">
+        <mat-icon>notifications_none</mat-icon>
+        <p>Nema novih obavijesti</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions" *ngIf="!isLoading">
+  <h3>Brze akcije</h3>
+  <div class="actions-grid">
+    <button mat-raised-button color="primary" (click)="goToBrowseCourses()">
+      <mat-icon>explore</mat-icon>
+      Pregledaj kurseve
+    </button>
+    <button mat-raised-button (click)="goToMyCourses()">
+      <mat-icon>school</mat-icon>
+      Moji kursevi
+    </button>
+    <button mat-raised-button (click)="goToProfile()">
+      <mat-icon>person</mat-icon>
+      Uredi profil
+    </button>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <p>{{ errorMessage }}</p>
+</div>

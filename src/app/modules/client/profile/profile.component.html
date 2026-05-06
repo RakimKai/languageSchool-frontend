@@ -1,0 +1,214 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="header-content">
+    <h1>Moj profil</h1>
+    <p>Upravljajte vasim licnim informacijama i postavkama</p>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<div class="profile-layout" *ngIf="!isLoading && user">
+  <!-- Left Column - Profile Image -->
+  <div class="profile-sidebar">
+    <div class="image-card">
+      <div class="image-wrapper">
+        <div class="image-preview">
+          <img *ngIf="imagePreview" [src]="imagePreview" alt="Profile">
+          <mat-icon *ngIf="!imagePreview">account_circle</mat-icon>
+        </div>
+        <div class="image-overlay" (click)="fileInput.click()">
+          <mat-icon>photo_camera</mat-icon>
+          <span>Promijeni sliku</span>
+        </div>
+      </div>
+
+      <input type="file"
+             #fileInput
+             hidden
+             accept="image/*"
+             (change)="onFileSelected($event)">
+
+      <div class="user-name">{{ fullName }}</div>
+      <div class="user-email">{{ user.email }}</div>
+
+      <div class="role-badge">
+        <mat-icon>school</mat-icon>
+        <span>Student</span>
+      </div>
+
+      <!-- Upload Controls (shown when file selected) -->
+      <div class="upload-section" *ngIf="selectedFile">
+        <div class="selected-file">
+          <mat-icon>image</mat-icon>
+          <span>{{ selectedFile.name }}</span>
+          <button mat-icon-button (click)="removeSelectedFile()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <button mat-raised-button
+                color="primary"
+                class="upload-btn"
+                (click)="uploadImage()"
+                [disabled]="isUploading">
+          <mat-icon *ngIf="!isUploading">upload</mat-icon>
+          <mat-spinner *ngIf="isUploading" diameter="18"></mat-spinner>
+          {{ isUploading ? 'Uploading...' : 'Sacuvaj sliku' }}
+        </button>
+
+        <mat-progress-bar *ngIf="isUploading"
+                          mode="determinate"
+                          [value]="uploadProgress"
+                          class="upload-progress">
+        </mat-progress-bar>
+      </div>
+    </div>
+
+    <!-- Account Stats -->
+    <div class="account-stats">
+      <div class="stat-item">
+        <mat-icon>calendar_today</mat-icon>
+        <div class="stat-content">
+          <span class="stat-label">Clan od</span>
+          <span class="stat-value">{{ user.createdAtUtc | date:'dd.MM.yyyy' }}</span>
+        </div>
+      </div>
+      <div class="stat-item" *ngIf="user.modifiedAtUtc">
+        <mat-icon>update</mat-icon>
+        <div class="stat-content">
+          <span class="stat-label">Zadnja izmjena</span>
+          <span class="stat-value">{{ user.modifiedAtUtc | date:'dd.MM.yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column - Form -->
+  <div class="profile-main">
+    <div class="form-card">
+      <div class="card-header">
+        <h2>Licne informacije</h2>
+        <p>Azurirajte vase podatke</p>
+      </div>
+
+      <form [formGroup]="profileForm" class="profile-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Ime</mat-label>
+            <input matInput formControlName="firstName" placeholder="Unesite vase ime">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="profileForm.get('firstName')?.hasError('maxlength')">
+              Maksimalno 50 karaktera
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Prezime</mat-label>
+            <input matInput formControlName="lastName" placeholder="Unesite vase prezime">
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <mat-error *ngIf="profileForm.get('lastName')?.hasError('maxlength')">
+              Maksimalno 50 karaktera
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Korisnicko ime</mat-label>
+            <input matInput formControlName="username" placeholder="Unesite korisnicko ime">
+            <mat-icon matPrefix>alternate_email</mat-icon>
+            <mat-error *ngIf="profileForm.get('username')?.hasError('maxlength')">
+              Maksimalno 30 karaktera
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Broj telefona</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="+387 XX XXX XXX">
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="profileForm.get('phoneNumber')?.hasError('pattern')">
+              Neispravan format
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field full-width">
+          <mat-label>Adresa</mat-label>
+          <input matInput formControlName="address" placeholder="Unesite vasu adresu">
+          <mat-icon matPrefix>location_on</mat-icon>
+          <mat-error *ngIf="profileForm.get('address')?.hasError('maxlength')">
+            Maksimalno 200 karaktera
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field full-width">
+          <mat-label>Grad</mat-label>
+          <mat-select formControlName="cityId">
+            <mat-option [value]="null">-- Odaberite grad --</mat-option>
+            <mat-option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>location_city</mat-icon>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button
+                  color="primary"
+                  class="save-btn"
+                  (click)="saveProfile()"
+                  [disabled]="profileForm.invalid || isSaving">
+            <mat-icon *ngIf="!isSaving">save</mat-icon>
+            <mat-spinner *ngIf="isSaving" diameter="18"></mat-spinner>
+            {{ isSaving ? 'Cuvanje...' : 'Sacuvaj promjene' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Security Section -->
+    <div class="security-card">
+      <div class="card-header">
+        <h2>Sigurnost</h2>
+        <p>Upravljajte sigurnosnim postavkama</p>
+      </div>
+
+      <div class="security-item">
+        <div class="security-info">
+          <mat-icon>email</mat-icon>
+          <div>
+            <span class="security-label">Email adresa</span>
+            <span class="security-value">{{ user.email }}</span>
+          </div>
+        </div>
+        <mat-chip class="verified-chip">
+          <mat-icon>check_circle</mat-icon>
+          Verificirano
+        </mat-chip>
+      </div>
+
+      <div class="security-item">
+        <div class="security-info">
+          <mat-icon>lock</mat-icon>
+          <div>
+            <span class="security-label">Lozinka</span>
+            <span class="security-value">************</span>
+          </div>
+        </div>
+        <button mat-stroked-button color="primary" class="change-btn">
+          Promijeni
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <p>{{ errorMessage }}</p>
+</div>

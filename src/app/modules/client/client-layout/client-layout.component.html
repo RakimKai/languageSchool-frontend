@@ -1,0 +1,63 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- SIDEBAR -->
+  <mat-sidenav mode="side" opened class="sidenav">
+    <!-- SIDEBAR HEADER WITH USER INFO -->
+    <div class="sidebar-header">
+      <!-- User Info -->
+      <div class="user-info">
+        <div class="user-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="user-details">
+          <div class="user-email">{{ auth.currentUser()?.email }}</div>
+          <div class="user-role">
+            <mat-chip class="role-chip student">
+              <mat-icon>school</mat-icon>
+              {{ 'SIDEBAR.ROLES.STUDENT' | translate }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION MENU -->
+    <mat-nav-list>
+      <!-- MAIN SECTION -->
+      <div class="nav-section-title">{{ 'SIDEBAR.CLIENT.MENU_SECTION' | translate }}</div>
+
+      <a mat-list-item routerLink="/client/dashboard" routerLinkActive="active">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.CLIENT.DASHBOARD' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/client/my-courses" routerLinkActive="active">
+        <mat-icon matListItemIcon>school</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.CLIENT.MY_COURSES' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/client/profile" routerLinkActive="active">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.CLIENT.PROFILE' | translate }}</span>
+      </a>
+
+      <!-- BROWSE -->
+      <div class="nav-section-title">{{ 'SIDEBAR.CLIENT.BROWSE_SECTION' | translate }}</div>
+
+      <a mat-list-item routerLink="/client/browse" routerLinkActive="active">
+        <mat-icon matListItemIcon>explore</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.CLIENT.BROWSE_COURSES' | translate }}</span>
+      </a>
+
+      <!-- LOGOUT -->
+      <a mat-list-item routerLink="/auth/logout" routerLinkActive="active" class="logout-item">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span matListItemTitle>{{ 'SIDEBAR.CLIENT.LOGOUT' | translate }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- MAIN CONTENT -->
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

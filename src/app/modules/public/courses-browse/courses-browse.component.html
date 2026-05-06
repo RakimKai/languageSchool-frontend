@@ -1,0 +1,175 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="header-content">
+    <h1>Kursevi</h1>
+    <p>Pronadite savrseni kurs za vas</p>
+  </div>
+</div>
+
+<div class="browse-container">
+  <!-- Sidebar Filters -->
+  <aside class="filters-sidebar">
+    <div class="sidebar-header">
+      <h3>Filteri</h3>
+      <button mat-button color="primary" (click)="clearFilters()" *ngIf="selectedCategoryId || searchTerm">
+        Ocisti
+      </button>
+    </div>
+
+    <!-- Search with Autocomplete -->
+    <div class="filter-section">
+      <label class="filter-label">Pretraga</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput
+               [formControl]="searchControl"
+               [matAutocomplete]="auto"
+               (keyup.enter)="onSearch()"
+               placeholder="Pretrazite kurseve...">
+        <mat-icon matSuffix class="search-icon" (click)="onSearch()">search</mat-icon>
+        <mat-autocomplete #auto="matAutocomplete"
+                          [displayWith]="displayFn"
+                          (optionSelected)="onAutocompleteSelect($event.option.value)">
+          <mat-option *ngIf="isLoadingAutocomplete" disabled class="loading-option">
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Pretrazujem...</span>
+          </mat-option>
+          <mat-option *ngFor="let course of autocompleteSuggestions" [value]="course">
+            <div class="autocomplete-option">
+              <mat-icon class="option-icon">school</mat-icon>
+              <div class="option-content">
+                <span class="option-name">{{ course.name }}</span>
+                <span class="option-category">{{ course.categoryName || 'Opsti kurs' }}</span>
+              </div>
+              <span class="option-price">{{ course.price || 0 }} KM</span>
+            </div>
+          </mat-option>
+          <mat-option *ngIf="!isLoadingAutocomplete && autocompleteSuggestions.length === 0 && searchControl.value && searchControl.value.length >= 2" disabled>
+            Nema rezultata za "{{ searchControl.value }}"
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="filter-section">
+      <label class="filter-label">Kategorija</label>
+      <div class="category-list">
+        <div class="category-item"
+             [class.active]="selectedCategoryId === null"
+             (click)="onCategoryChange(null)">
+          <span>Sve kategorije</span>
+          <span class="count">{{ totalCount }}</span>
+        </div>
+        <div *ngFor="let cat of categories"
+             class="category-item"
+             [class.active]="selectedCategoryId === cat.id"
+             (click)="onCategoryChange(cat.id)">
+          <span>{{ cat.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price Range (visual only) -->
+    <div class="filter-section">
+      <label class="filter-label">Cijena (KM)</label>
+      <div class="price-range">
+        <mat-form-field appearance="outline" class="price-field">
+          <input matInput type="number" placeholder="Min">
+        </mat-form-field>
+        <span class="price-separator">-</span>
+        <mat-form-field appearance="outline" class="price-field">
+          <input matInput type="number" placeholder="Max">
+        </mat-form-field>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="courses-content">
+    <!-- Results Header -->
+    <div class="results-header">
+      <span class="results-count" *ngIf="!isLoading">
+        {{ totalCount }} kurs(eva) pronadjeno
+      </span>
+      <div class="sort-control">
+        <mat-form-field appearance="outline" class="sort-field">
+          <mat-select value="newest">
+            <mat-option value="newest">Najnoviji</mat-option>
+            <mat-option value="price-low">Cijena: niza prvo</mat-option>
+            <mat-option value="price-high">Cijena: visa prvo</mat-option>
+            <mat-option value="name">Naziv A-Z</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" *ngIf="!isLoading && courses.length > 0">
+      <div *ngFor="let course of courses"
+           class="course-card"
+           (click)="onCourseClick(course)">
+        <div class="course-image">
+          <div class="image-placeholder">
+            <mat-icon>image</mat-icon>
+          </div>
+          <span class="course-level" *ngIf="course.courseType">{{ course.courseType }}</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category-tag">{{ course.categoryName || 'Opsti kurs' }}</div>
+          <h3 class="course-title">{{ course.name }}</h3>
+          <p class="course-description">
+            {{ course.description || 'Naucite sa strucnim predavacima' }}
+          </p>
+          <div class="course-meta">
+            <div class="meta-item" *ngIf="course.professorName">
+              <mat-icon>person</mat-icon>
+              <span>{{ course.professorName }}</span>
+            </div>
+            <div class="meta-item" *ngIf="course.durationInHours">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ course.durationInHours }}h</span>
+            </div>
+          </div>
+          <div class="course-footer">
+            <span class="course-price">{{ course.price || 0 }} KM</span>
+            <button mat-flat-button color="primary" class="details-btn">
+              Detalji
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="!isLoading && courses.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <h3>Nema pronadjenih kurseva</h3>
+      <p>Pokusajte prilagoditi vasu pretragu ili filtere</p>
+      <button mat-stroked-button color="primary" (click)="clearFilters()">
+        Ocisti filtere
+      </button>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator *ngIf="totalCount > 0"
+                   [length]="totalCount"
+                   [pageSize]="pageSize"
+                   [pageIndex]="pageIndex"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPageChange($event)"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </main>
+</div>
+
+<!-- Error Message -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <p>{{ errorMessage }}</p>
+</div>

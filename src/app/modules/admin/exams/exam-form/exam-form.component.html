@@ -1,0 +1,74 @@
+<div class="page-header">
+  <h1>{{ isEditMode ? 'Edit Exam' : 'New Exam' }}</h1>
+</div>
+
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- Error -->
+<div class="error-container" *ngIf="errorMessage">
+  <mat-icon>error</mat-icon>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<!-- Form -->
+<mat-card *ngIf="!isLoading && !errorMessage">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Exam Name</mat-label>
+          <input matInput formControlName="name" placeholder="Enter exam name">
+          <mat-error *ngIf="form.get('name')?.invalid">
+            {{ getErrorMessage('name') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Course -->
+        <mat-form-field appearance="outline">
+          <mat-label>Course</mat-label>
+          <mat-select formControlName="courseId">
+            <mat-option *ngFor="let course of courses" [value]="course.id">
+              {{ course.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('courseId')?.invalid">
+            Course is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Exam Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Exam Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="examDate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="form.get('examDate')?.invalid">
+            Date is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Price -->
+        <mat-form-field appearance="outline">
+          <mat-label>Price (KM)</mat-label>
+          <input matInput type="number" formControlName="price" placeholder="Enter price">
+          <span matSuffix>KM</span>
+        </mat-form-field>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-button type="button" (click)="onCancel()">
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSaving">
+          <mat-spinner *ngIf="isSaving" diameter="20"></mat-spinner>
+          <span *ngIf="!isSaving">{{ isEditMode ? 'Update' : 'Create' }}</span>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

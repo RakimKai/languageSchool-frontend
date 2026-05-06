@@ -1,0 +1,429 @@
+// === VARIABLES ===
+$primary-blue: #4a90e2;
+$dark-blue: #2e5c8a;
+$light-blue: #e8f4fd;
+$lighter-blue: #f5faff;
+$text-dark: #1a1a1a;
+$text-light: #666666;
+$white: #ffffff;
+$success-green: #4caf50;
+$warning-orange: #ff9800;
+$accent-cyan: #00bcd4;
+
+// === PAGE HEADER ===
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  .header-content {
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: $text-light;
+      font-size: 15px;
+      margin: 0;
+    }
+  }
+
+  button {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// === MAIN CARD ===
+.main-card {
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+// === TABS ===
+.courses-tabs {
+  ::ng-deep {
+    .mat-mdc-tab-header {
+      background: $lighter-blue;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .mat-mdc-tab {
+      min-width: 140px;
+      padding: 0 24px;
+      height: 56px;
+
+      .mdc-tab__content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .mat-mdc-tab-body-wrapper {
+      padding: 0;
+    }
+  }
+
+  .tab-label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba($primary-blue, 0.1);
+    color: $primary-blue;
+
+    &.active {
+      background: rgba($success-green, 0.1);
+      color: $success-green;
+    }
+
+    &.completed {
+      background: rgba($accent-cyan, 0.1);
+      color: $accent-cyan;
+    }
+
+    &.unpaid {
+      background: rgba($warning-orange, 0.1);
+      color: $warning-orange;
+    }
+  }
+}
+
+// === TABLE ===
+.table-container {
+  overflow-x: auto;
+}
+
+.courses-table {
+  width: 100%;
+  background: transparent;
+
+  th.mat-header-cell {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: $lighter-blue;
+  }
+
+  td.mat-cell {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    vertical-align: middle;
+  }
+
+  .course-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $lighter-blue;
+    }
+  }
+
+  // Course Cell
+  .course-cell {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .course-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, $primary-blue 0%, $dark-blue 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      mat-icon {
+        color: $white;
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .course-info {
+      display: flex;
+      flex-direction: column;
+
+      .course-name {
+        font-weight: 600;
+        color: $text-dark;
+        font-size: 15px;
+        margin-bottom: 2px;
+      }
+
+      .course-level {
+        font-size: 12px;
+        color: $text-light;
+      }
+    }
+  }
+
+  // Date Cell
+  .date-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $text-dark;
+    font-size: 14px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: $text-light;
+    }
+  }
+
+  // Status Badge
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &.status-active {
+      background: rgba($success-green, 0.12);
+      color: $success-green;
+    }
+
+    &.status-completed {
+      background: rgba($accent-cyan, 0.12);
+      color: $accent-cyan;
+    }
+
+    &.status-unpaid {
+      background: rgba($warning-orange, 0.12);
+      color: $warning-orange;
+    }
+  }
+
+  // Download Button
+  .download-btn {
+    background: #e53935;
+    color: $white;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    height: 38px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+    }
+
+    mat-spinner {
+      margin-right: 6px;
+
+      ::ng-deep circle {
+        stroke: $white;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      background: #c62828;
+    }
+  }
+
+  // No Certificate
+  .no-certificate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: $text-light;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // Actions Button
+  .actions-btn {
+    color: $text-light;
+
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+}
+
+// === EMPTY STATE ===
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+
+  .empty-icon {
+    width: 100px;
+    height: 100px;
+    background: $lighter-blue;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #e0e0e0;
+    }
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-dark;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: $text-light;
+    margin: 0 0 24px 0;
+    font-size: 15px;
+  }
+
+  button {
+    border-radius: 12px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// === LOADING ===
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+}
+
+// === ERROR ===
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  color: #f44336;
+  background: #ffebee;
+  border-radius: 12px;
+  margin: 20px 0;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// === RESPONSIVE ===
+@media (max-width: 992px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .courses-table {
+    .course-cell {
+      .course-icon {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 20px;
+
+    .header-content h1 {
+      font-size: 22px;
+    }
+  }
+
+  .courses-tabs {
+    ::ng-deep .mat-mdc-tab {
+      min-width: 100px;
+      padding: 0 12px;
+    }
+
+    .tab-label {
+      font-size: 13px;
+    }
+  }
+
+  .courses-table {
+    th.mat-header-cell,
+    td.mat-cell {
+      padding: 12px;
+    }
+
+    // Hide some columns on mobile
+    th.mat-header-cell:nth-child(4),
+    td.mat-cell:nth-child(4),
+    th.mat-header-cell:nth-child(5),
+    td.mat-cell:nth-child(5) {
+      display: none;
+    }
+  }
+}

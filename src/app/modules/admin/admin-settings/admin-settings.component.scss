@@ -1,0 +1,150 @@
+$primary-color: #4976b5;
+$text-primary: #212121;
+$text-secondary: #757575;
+$border-color: #e3e8ef;
+$success-color: #66bb6a;
+
+.settings-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 32px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: $text-secondary;
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(73, 118, 181, 0.08);
+
+  mat-card-header {
+    margin-bottom: 16px;
+
+    mat-icon[mat-card-avatar] {
+      background: linear-gradient(135deg, $primary-color 0%, lighten($primary-color, 15%) 100%);
+      color: white;
+      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    mat-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    mat-card-subtitle {
+      color: $text-secondary;
+      font-size: 13px;
+    }
+  }
+
+  mat-card-content {
+    padding-top: 8px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flag-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+
+  .setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .setting-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-primary;
+    }
+
+    .setting-description,
+    .setting-value {
+      font-size: 13px;
+      color: $text-secondary;
+    }
+
+    .setting-value.status-online {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: $success-color;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.theme-chip {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #e65100;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+mat-divider {
+  margin: 0 !important;
+}
+
+.lang-select {
+  width: 160px;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
