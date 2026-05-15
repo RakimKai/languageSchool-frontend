@@ -171,6 +171,7 @@ export class RegisterComponent extends BaseComponent implements AfterViewInit, O
       lastname: this.form.value.lastname ?? '',
       phoneNumber: this.form.value.phoneNumber || null,
       fingerprint: null,
+      recaptchaToken: this.captchaToken,
     };
 
     this.authApi.register(payload).subscribe({

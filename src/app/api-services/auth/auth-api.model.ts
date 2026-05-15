@@ -72,6 +72,7 @@ export interface RegisterCommand {
   phoneNumber?: string | null;
   address?: string | null;
   fingerprint?: string | null;
+  recaptchaToken?: string | null;
 }
 
 /**
