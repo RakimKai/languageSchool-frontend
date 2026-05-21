@@ -23,12 +23,12 @@ export class NotificationsApiService {
     return this.http.get<NotificationDto>(`${this.baseUrl}/${id}`);
   }
 
-  create(payload: CreateNotificationDto): Observable<NotificationDto> {
-    return this.http.post<NotificationDto>(this.baseUrl, payload);
+  create(payload: CreateNotificationDto): Observable<number> {
+    return this.http.post<number>(this.baseUrl, payload);
   }
 
-  update(id: number, payload: UpdateNotificationDto): Observable<NotificationDto> {
-    return this.http.put<NotificationDto>(`${this.baseUrl}/${id}`, payload);
+  update(id: number, payload: UpdateNotificationDto): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, payload);
   }
 
   delete(id: number): Observable<void> {

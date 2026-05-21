@@ -2,6 +2,8 @@ import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { CourseEnrollmentsApiService } from '../../../../api-services/course-enrollments/course-enrollments-api.service';
 import { CoursesApiService } from '../../../../api-services/courses/courses-api.service';
 import { CourseEnrollmentDto } from '../../../../api-services/course-enrollments/course-enrollments-api.model';
@@ -257,24 +259,34 @@ export class EnrollmentsListComponent extends BaseComponent implements OnInit {
   }
 
   private processBulkPayment(enrollments: CourseEnrollmentDto[]): void {
-    let completed = 0;
     const total = enrollments.length;
 
-    enrollments.forEach(enrollment => {
-      this.enrollmentsApi.updatePaymentStatus(enrollment.id, { isPaid: true }).subscribe({
-        next: () => {
+    const requests = enrollments.map(enrollment =>
+      this.enrollmentsApi.updatePaymentStatus(enrollment.id, { isPaid: true }).pipe(
+        map(() => {
           enrollment.isPaid = true;
           enrollment.paymentDate = new Date().toISOString();
-          completed++;
-          if (completed === total) {
-            this.selectedEnrollments = [];
-            this.snackBar.open(`${total} upis(a) oznaceno kao placeno`, 'Zatvori', { duration: 3000 });
-          }
-        },
-        error: (err) => {
+          return { ok: true as const, enrollment };
+        }),
+        catchError(err => {
           console.error('Error updating payment status', err);
-        }
-      });
+          return of({ ok: false as const, enrollment });
+        })
+      )
+    );
+
+    forkJoin(requests).subscribe(results => {
+      const succeeded = results.filter(r => r.ok).length;
+      const failed = total - succeeded;
+      this.selectedEnrollments = [];
+
+      if (failed === 0) {
+        this.snackBar.open(`${succeeded} upis(a) oznaceno kao placeno`, 'Zatvori', { duration: 3000 });
+      } else if (succeeded === 0) {
+        this.snackBar.open(`Greska: nijedan od ${total} upisa nije azuriran`, 'Zatvori', { duration: 4000 });
+      } else {
+        this.snackBar.open(`${succeeded}/${total} upis(a) oznaceno kao placeno, ${failed} neuspjelo`, 'Zatvori', { duration: 4000 });
+      }
     });
   }
 

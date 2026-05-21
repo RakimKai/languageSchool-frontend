@@ -30,6 +30,8 @@ export class CoursesApiService {
     if (query.orderDirection) params = params.set('orderDirection', query.orderDirection);
     if (query.categoryId) params = params.set('categoryId', query.categoryId.toString());
     if (query.searchTerm) params = params.set('searchTerm', query.searchTerm);
+    if (query.minPrice != null) params = params.set('minPrice', query.minPrice.toString());
+    if (query.maxPrice != null) params = params.set('maxPrice', query.maxPrice.toString());
 
     return this.http.get<PageResult<CourseDto>>(`${this.baseUrl}/paged`, { params });
   }

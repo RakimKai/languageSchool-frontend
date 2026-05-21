@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '../../../core/components/base-classes/base-component';
 import { AuthApiService } from '../../../api-services/auth/auth-api.service';
 import { AuthStorageService } from '../../../core/services/auth/auth-storage.service';
+import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
 import { RegisterCommand } from '../../../api-services/auth/auth-api.model';
 import { RecaptchaService } from '../../../core/services/recaptcha.service';
 
@@ -39,6 +40,7 @@ export class RegisterComponent extends BaseComponent implements AfterViewInit, O
   private fb = inject(FormBuilder);
   private authApi = inject(AuthApiService);
   private authStorage = inject(AuthStorageService);
+  private authFacade = inject(AuthFacadeService);
   private router = inject(Router);
   private recaptchaService = inject(RecaptchaService);
 
@@ -176,12 +178,12 @@ export class RegisterComponent extends BaseComponent implements AfterViewInit, O
 
     this.authApi.register(payload).subscribe({
       next: (response) => {
-        // Store tokens
-        this.authStorage.setAccessToken(response.accessToken);
-        this.authStorage.setRefreshToken(response.refreshToken);
+        // Persist tokens and update auth signals so guards see the user as authenticated
+        this.authFacade.setSession(response.accessToken, response.refreshToken);
 
         this.stopLoading();
-        this.router.navigate(['/admin']);
+        // Registered users are students by default; admin route is gated
+        this.router.navigate([this.authFacade.isAdmin() ? '/admin' : '/client/browse']);
       },
       error: (err) => {
         const message = err.error?.message || 'Registration failed. Please try again.';

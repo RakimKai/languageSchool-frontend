@@ -27,19 +27,19 @@ export class CourseCategoriesApiService {
     return this.http.get<CourseCategoryDto>(`${this.baseUrl}/${id}`);
   }
 
-  create(payload: CreateCourseCategoryDto): Observable<CourseCategoryDto> {
-    return this.http.post<CourseCategoryDto>(this.baseUrl, payload);
+  create(payload: CreateCourseCategoryDto): Observable<number> {
+    return this.http.post<number>(this.baseUrl, payload);
   }
 
-  update(id: number, payload: UpdateCourseCategoryDto): Observable<CourseCategoryDto> {
-    return this.http.put<CourseCategoryDto>(`${this.baseUrl}/${id}`, payload);
+  update(id: number, payload: UpdateCourseCategoryDto): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, payload);
   }
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  toggleStatus(id: number): Observable<CourseCategoryDto> {
-    return this.http.patch<CourseCategoryDto>(`${this.baseUrl}/${id}/toggle-status`, {});
+  toggleStatus(id: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${id}/toggle-status`, {});
   }
 }

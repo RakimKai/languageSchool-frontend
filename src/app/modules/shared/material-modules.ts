@@ -71,6 +71,5 @@ export const materialModules = [
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatTreeModule,
-  MatProgressSpinnerModule
+  MatTreeModule
 ];

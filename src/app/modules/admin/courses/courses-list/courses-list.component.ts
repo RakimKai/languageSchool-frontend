@@ -1,11 +1,13 @@
-import { Component, OnInit, inject, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { AfterViewInit, Component, OnInit, inject, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { CoursesApiService } from '../../../../api-services/courses/courses-api.service';
-import { CourseDto } from '../../../../api-services/courses/courses-api.model';
+import { CourseDto, CoursesPagedQuery } from '../../../../api-services/courses/courses-api.model';
 import { BaseComponent } from '../../../../core/components/base-classes/base-component';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { FitConfirmDialogComponent } from '../../../shared/components/fit-confirm-dialog/fit-confirm-dialog.component';
@@ -17,38 +19,74 @@ import { DialogType, DialogButton, DialogConfig } from '../../../shared/models/d
   templateUrl: './courses-list.component.html',
   styleUrl: './courses-list.component.scss'
 })
-export class CoursesListComponent extends BaseComponent implements OnInit {
+export class CoursesListComponent extends BaseComponent implements OnInit, AfterViewInit {
   private coursesApi = inject(CoursesApiService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private toaster = inject(ToasterService);
 
   displayedColumns: string[] = ['name', 'categoryName', 'professorName', 'courseDate', 'price', 'actions'];
-  dataSource = new MatTableDataSource<CourseDto>([]);
+  data: CourseDto[] = [];
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25, 50];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Filter values
+  // Filter values (single search term hits backend; category accepted as id)
   filterName = '';
-  filterCategory = '';
-  filterProfessor = '';
+  filterCategoryId: number | null = null;
+  private filterChange$ = new Subject<void>();
 
-  // PDF download state
   isDownloading = false;
 
   ngOnInit(): void {
+    // Debounce text/category filter changes
+    this.filterChange$
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => {
+        if (this.paginator) this.paginator.pageIndex = 0;
+        this.pageIndex = 0;
+        this.loadCourses();
+      });
+
     this.loadCourses();
+  }
+
+  ngAfterViewInit(): void {
+    // Reset to first page when sort changes
+    this.sort.sortChange.subscribe(() => {
+      this.paginator.pageIndex = 0;
+    });
+
+    merge(this.sort.sortChange, this.paginator.page).subscribe(() => {
+      this.pageIndex = this.paginator.pageIndex;
+      this.pageSize = this.paginator.pageSize;
+      this.loadCourses();
+    });
+  }
+
+  private buildQuery(): CoursesPagedQuery {
+    const orderBy = this.sort?.active || undefined;
+    const orderDirection = this.sort?.direction ? (this.sort.direction as 'asc' | 'desc') : undefined;
+    return {
+      page: this.pageIndex + 1,
+      pageSize: this.pageSize,
+      orderBy,
+      orderDirection,
+      searchTerm: this.filterName?.trim() || undefined,
+      categoryId: this.filterCategoryId ?? undefined,
+    };
   }
 
   loadCourses(): void {
     this.startLoading();
-    this.coursesApi.getAll().subscribe({
-      next: (data) => {
-        this.dataSource.data = data;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.setupFilter();
+    this.coursesApi.getAllPaged(this.buildQuery()).subscribe({
+      next: (result) => {
+        this.data = result.items;
+        this.totalItems = result.totalItems;
         this.stopLoading();
       },
       error: (err) => {
@@ -58,33 +96,14 @@ export class CoursesListComponent extends BaseComponent implements OnInit {
     });
   }
 
-  private setupFilter(): void {
-    this.dataSource.filterPredicate = (data: CourseDto, filter: string) => {
-      const searchTerms = JSON.parse(filter);
-      const matchesName = !searchTerms.name ||
-        data.name.toLowerCase().includes(searchTerms.name.toLowerCase());
-      const matchesCategory = !searchTerms.category ||
-        (data.categoryName?.toLowerCase().includes(searchTerms.category.toLowerCase()) ?? false);
-      const matchesProfessor = !searchTerms.professor ||
-        (data.professorName?.toLowerCase().includes(searchTerms.professor.toLowerCase()) ?? false);
-      return matchesName && matchesCategory && matchesProfessor;
-    };
-  }
-
   applyFilter(): void {
-    const filterValue = JSON.stringify({
-      name: this.filterName,
-      category: this.filterCategory,
-      professor: this.filterProfessor
-    });
-    this.dataSource.filter = filterValue;
+    this.filterChange$.next();
   }
 
   clearFilters(): void {
     this.filterName = '';
-    this.filterCategory = '';
-    this.filterProfessor = '';
-    this.dataSource.filter = '';
+    this.filterCategoryId = null;
+    this.applyFilter();
   }
 
   onCreate(): void {

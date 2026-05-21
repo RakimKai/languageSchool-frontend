@@ -70,7 +70,14 @@ export class AuthFacadeService {
 
   redirectToLogin(): void {
     this.clearUserState();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
+  }
+
+  /** Persist tokens and decode the user signal from the access token (e.g. after register). */
+  setSession(accessToken: string, refreshToken: string): void {
+    this.storage.setAccessToken(accessToken);
+    this.storage.setRefreshToken(refreshToken);
+    this.decodeAndSetUser(accessToken);
   }
 
   getAccessToken(): string | null {

@@ -41,7 +41,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 function isAuthEndpoint(url: string): boolean {
-    return url.includes('/Auth/');
+    const lower = url.toLowerCase();
+    return lower.includes('/api/auth/') || lower.includes('/api/account/');
 }
 
 function handle401Error(

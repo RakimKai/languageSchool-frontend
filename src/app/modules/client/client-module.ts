@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { ClientRoutingModule } from './client-routing-module';
 import { SharedModule } from '../shared/shared-module';
-import { PublicModule } from '../public/public-module';
+import { PublicCoursesModule } from '../public/public-courses-module';
 
 import { ClientLayoutComponent } from './client-layout/client-layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -19,7 +19,7 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     SharedModule,
     ClientRoutingModule,
-    PublicModule
+    PublicCoursesModule
   ]
 })
 export class ClientModule { }

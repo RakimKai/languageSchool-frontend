@@ -35,6 +35,10 @@ export class CoursesBrowseComponent extends BaseComponent implements OnInit, OnD
   // Filters
   selectedCategoryId: number | null = null;
   searchTerm = '';
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  sortBy: string = 'courseDate';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   // Autocomplete
   searchControl = new FormControl('');
@@ -115,8 +119,8 @@ export class CoursesBrowseComponent extends BaseComponent implements OnInit, OnD
     const query: CoursesPagedQuery = {
       page: this.pageIndex + 1,
       pageSize: this.pageSize,
-      orderBy: 'courseDate',
-      orderDirection: 'desc'
+      orderBy: this.sortBy,
+      orderDirection: this.sortDirection
     };
 
     if (this.selectedCategoryId) {
@@ -125,6 +129,13 @@ export class CoursesBrowseComponent extends BaseComponent implements OnInit, OnD
 
     if (this.searchTerm.trim()) {
       query.searchTerm = this.searchTerm.trim();
+    }
+
+    if (this.minPrice != null) {
+      query.minPrice = this.minPrice;
+    }
+    if (this.maxPrice != null) {
+      query.maxPrice = this.maxPrice;
     }
 
     this.coursesApi.getAllPaged(query).subscribe({
@@ -163,7 +174,23 @@ export class CoursesBrowseComponent extends BaseComponent implements OnInit, OnD
   clearFilters(): void {
     this.selectedCategoryId = null;
     this.searchTerm = '';
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.sortBy = 'courseDate';
+    this.sortDirection = 'desc';
     this.searchControl.setValue('');
+    this.pageIndex = 0;
+    this.loadCourses();
+  }
+
+  onSortChange(sortBy: string, sortDirection: 'asc' | 'desc'): void {
+    this.sortBy = sortBy;
+    this.sortDirection = sortDirection;
+    this.pageIndex = 0;
+    this.loadCourses();
+  }
+
+  onPriceFilterChange(): void {
     this.pageIndex = 0;
     this.loadCourses();
   }

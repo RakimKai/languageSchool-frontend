@@ -24,15 +24,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'COURSES.FILTER_CATEGORY' | translate }}</mat-label>
-        <input matInput [(ngModel)]="filterCategory" (input)="applyFilter()" [placeholder]="'COURSES.FILTER_CATEGORY_PLACEHOLDER' | translate">
+        <input matInput type="number" [(ngModel)]="filterCategoryId" (input)="applyFilter()" [placeholder]="'COURSES.FILTER_CATEGORY_PLACEHOLDER' | translate">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'COURSES.FILTER_PROFESSOR' | translate }}</mat-label>
-        <input matInput [(ngModel)]="filterProfessor" (input)="applyFilter()" [placeholder]="'COURSES.FILTER_PROFESSOR_PLACEHOLDER' | translate">
-      </mat-form-field>
-
-      <button mat-button color="warn" (click)="clearFilters()" *ngIf="filterName || filterCategory || filterProfessor">
+      <button mat-button color="warn" (click)="clearFilters()" *ngIf="filterName || filterCategoryId">
         <mat-icon>clear</mat-icon>
         {{ 'COURSES.CLEAR_FILTERS' | translate }}
       </button>
@@ -54,7 +49,7 @@
 <!-- Table -->
 <mat-card *ngIf="!isLoading && !errorMessage">
   <mat-card-content>
-    <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+    <table mat-table [dataSource]="data" matSort class="full-width-table">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'COURSES.TABLE.NAME' | translate }}</th>
@@ -111,7 +106,10 @@
       </tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]"
+    <mat-paginator [length]="totalItems"
+                   [pageSize]="pageSize"
+                   [pageIndex]="pageIndex"
+                   [pageSizeOptions]="pageSizeOptions"
                    showFirstLastButtons
                    aria-label="Select page of courses">
     </mat-paginator>

@@ -24,15 +24,15 @@ export class ExamsApiService {
   }
 
   getByCourse(courseId: number): Observable<ExamDto[]> {
-    return this.http.get<ExamDto[]>(`${this.baseUrl}/course/${courseId}`);
+    return this.http.get<ExamDto[]>(`${this.baseUrl}/by-course/${courseId}`);
   }
 
-  create(payload: CreateExamDto): Observable<ExamDto> {
-    return this.http.post<ExamDto>(this.baseUrl, payload);
+  create(payload: CreateExamDto): Observable<number> {
+    return this.http.post<number>(this.baseUrl, payload);
   }
 
-  update(id: number, payload: UpdateExamDto): Observable<ExamDto> {
-    return this.http.put<ExamDto>(`${this.baseUrl}/${id}`, payload);
+  update(id: number, payload: UpdateExamDto): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, payload);
   }
 
   delete(id: number): Observable<void> {

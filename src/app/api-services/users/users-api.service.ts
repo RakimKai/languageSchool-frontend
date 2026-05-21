@@ -38,6 +38,11 @@ export class UsersApiService {
 
   getProfileImageUrl(path: string | null): string | null {
     if (!path) return null;
-    return `${environment.apiUrl}/uploads/${path}`;
+    // Accept any of: absolute URL, "/uploads/..." (already-prefixed by backend), or raw storage path like "images/abc.png"
+    if (/^https?:\/\//i.test(path)) return path;
+    const normalized = path.startsWith('/uploads/')
+      ? path
+      : `/uploads/${path.replace(/^\/+/, '')}`;
+    return `${environment.apiUrl}${normalized}`;
   }
 }

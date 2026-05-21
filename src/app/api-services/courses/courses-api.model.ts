@@ -25,6 +25,8 @@ export interface CoursesPagedQuery {
   orderDirection?: 'asc' | 'desc';
   categoryId?: number;
   searchTerm?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface CreateCourseDto {

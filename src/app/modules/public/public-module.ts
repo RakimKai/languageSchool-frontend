@@ -1,23 +1,15 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
-import {PublicRoutingModule} from './public-routing-module';
-import {CoursesBrowseComponent} from './courses-browse/courses-browse.component';
-import {CourseDetailsComponent} from './course-details/course-details.component';
-import {SharedModule} from '../shared/shared-module';
-
+import { PublicRoutingModule } from './public-routing-module';
+import { PublicCoursesModule } from './public-courses-module';
 
 @NgModule({
-  declarations: [
-    CoursesBrowseComponent,
-    CourseDetailsComponent,
-  ],
   imports: [
-    SharedModule,
+    PublicCoursesModule,
     PublicRoutingModule,
   ],
   exports: [
-    CoursesBrowseComponent,
-    CourseDetailsComponent,
+    PublicCoursesModule,
   ]
 })
 export class PublicModule { }
